@@ -8,7 +8,7 @@ from rdkit.Chem import Descriptors, Lipinski
 # "h_bond_donors"
 # "flexibility"
 
-comparison = "flexibility"
+comparison = ("molecular_weight")
 
 
 # Common formulas
