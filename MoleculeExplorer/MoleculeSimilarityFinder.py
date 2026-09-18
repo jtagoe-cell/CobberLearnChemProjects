@@ -1,6 +1,7 @@
+
 import pubchempy as pcp
-from rdkit import Chem
-from rdkit.Chem import Descriptors
+from rdkit import Chem, DataStructs
+from rdkit.Chem import Descriptors, rdFingerprintGenerator
 
 
 # Common formulas
@@ -56,6 +57,10 @@ def get_molecule(compound_input):
         )
         return None
 
+    print(
+        f"{compound_input} SMILES: {smiles}"
+    )
+
     # Create RDKit molecule
     molecule = Chem.MolFromSmiles(smiles)
 
@@ -92,6 +97,33 @@ def molecular_weight_similarity(
     return similarity * 100
 
 
+def structural_similarity(
+    molecule1,
+    molecule2
+):
+
+    # Create Morgan fingerprints
+    generator = rdFingerprintGenerator.GetMorganGenerator(
+        radius=2
+    )
+
+    fingerprint1 = generator.GetFingerprint(
+        molecule1
+    )
+
+    fingerprint2 = generator.GetFingerprint(
+        molecule2
+    )
+
+    # Calculate Tanimoto similarity
+    similarity = DataStructs.TanimotoSimilarity(
+        fingerprint1,
+        fingerprint2
+    )
+
+    return similarity * 100
+
+
 # --------------------------------
 # Molecules to search
 # --------------------------------
@@ -122,7 +154,7 @@ molecule_database = [
 
 user_input = input(
     "Enter a molecule to find similar "
-    "molecular weights: "
+    "molecules: "
 )
 
 
@@ -182,15 +214,21 @@ if user_molecule is not None:
             molecule
         )
 
-        # Calculate difference
+        # Calculate molecular-weight difference
         difference = abs(
             user_weight - weight
         )
 
-        # Calculate similarity
-        similarity = molecular_weight_similarity(
+        # Calculate molecular-weight similarity
+        mw_similarity = molecular_weight_similarity(
             user_weight,
             weight
+        )
+
+        # Calculate structural similarity
+        structure_similarity = structural_similarity(
+            user_molecule,
+            molecule
         )
 
         # Store results
@@ -199,7 +237,8 @@ if user_molecule is not None:
                 compound_name,
                 weight,
                 difference,
-                similarity
+                mw_similarity,
+                structure_similarity
             )
         )
 
@@ -209,54 +248,122 @@ if user_molecule is not None:
     # difference
     # --------------------------------
 
-    results.sort(
+    mw_results = sorted(
+        results,
         key=lambda x: x[2]
     )
 
 
     # --------------------------------
-    # Most similar molecules
+    # Most similar by molecular weight
     # --------------------------------
 
     print(
-        "\n--- Molecules With Most Similar "
-        "Molecular Weight ---"
+        "\n--- Most Similar Molecular Weight ---"
     )
 
-    for result in results[:5]:
+    for result in mw_results[:5]:
 
         name = result[0]
         weight = result[1]
         difference = result[2]
-        similarity = result[3]
+        mw_similarity = result[3]
+        structure_similarity = result[4]
 
         print(
             f"{name}: "
             f"{weight:.4f} g/mol | "
-            f"difference: {difference:.4f} g/mol | "
-            f"similarity: {similarity:.2f}%"
+            f"MW difference: {difference:.4f} g/mol | "
+            f"MW similarity: {mw_similarity:.2f}% | "
+            f"Structural similarity: "
+            f"{structure_similarity:.2f}%"
         )
 
 
     # --------------------------------
-    # Least similar molecules
+    # Least similar by molecular weight
     # --------------------------------
 
     print(
-        "\n--- Molecules With Least Similar "
-        "Molecular Weight ---"
+        "\n--- Least Similar Molecular Weight ---"
     )
 
-    for result in results[-3:]:
+    for result in mw_results[-3:]:
 
         name = result[0]
         weight = result[1]
         difference = result[2]
-        similarity = result[3]
+        mw_similarity = result[3]
+        structure_similarity = result[4]
 
         print(
             f"{name}: "
             f"{weight:.4f} g/mol | "
-            f"difference: {difference:.4f} g/mol | "
-            f"similarity: {similarity:.2f}%"
+            f"MW difference: {difference:.4f} g/mol | "
+            f"MW similarity: {mw_similarity:.2f}% | "
+            f"Structural similarity: "
+            f"{structure_similarity:.2f}%"
+        )
+
+
+    # --------------------------------
+    # Sort by structural similarity
+    # --------------------------------
+
+    structural_results = sorted(
+        results,
+        key=lambda x: x[4],
+        reverse=True
+    )
+
+
+    # --------------------------------
+    # Most structurally similar
+    # --------------------------------
+
+    print(
+        "\n--- Most Structurally Similar ---"
+    )
+
+    for result in structural_results[:5]:
+
+        name = result[0]
+        weight = result[1]
+        difference = result[2]
+        mw_similarity = result[3]
+        structure_similarity = result[4]
+
+        print(
+            f"{name}: "
+            f"Structural similarity: "
+            f"{structure_similarity:.2f}% | "
+            f"MW: {weight:.4f} g/mol | "
+            f"MW difference: {difference:.4f} g/mol | "
+            f"MW similarity: {mw_similarity:.2f}%"
+        )
+
+
+    # --------------------------------
+    # Least structurally similar
+    # --------------------------------
+
+    print(
+        "\n--- Least Structurally Similar ---"
+    )
+
+    for result in structural_results[-3:]:
+
+        name = result[0]
+        weight = result[1]
+        difference = result[2]
+        mw_similarity = result[3]
+        structure_similarity = result[4]
+
+        print(
+            f"{name}: "
+            f"Structural similarity: "
+            f"{structure_similarity:.2f}% | "
+            f"MW: {weight:.4f} g/mol | "
+            f"MW difference: {difference:.4f} g/mol | "
+            f"MW similarity: {mw_similarity:.2f}%"
         )
