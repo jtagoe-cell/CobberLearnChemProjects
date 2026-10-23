@@ -1,0 +1,96 @@
+Target phrase: METHINKS IT IS LIKE A WEASEL
+Target length: 28
+
+Generation 0 | Score: 0/28 | Best string: GHHXFFOGRJMTLPMVMIYXRVPZHNRA
+Generation 1 | Score: 2/28 | Best string: GHTXFFKGRJLTLPMVMIYTDVRZHNRA
+Generation 2 | Score: 3/28 | Best string: GHTXFFKGRJLTLPMVMIYTAVRZHNRA
+Generation 3 | Score: 4/28 | Best string: GHTMFFKGRJLTLQMLMIYTAVRZHNRA
+Generation 4 | Score: 5/28 | Best string: OHTMFFKGRJLTLQMLMIYTAHRZHNEA
+Generation 5 | Score: 6/28 | Best string: OHTMFFKGRJLTLQMLMIYTAHWZFNEA
+Generation 6 | Score: 7/28 | Best string: OHTMFFKGRJLTLQMLMKYTAHWZFNEA
+Generation 7 | Score: 7/28 | Best string: OHTMFFKGRJLTLQMLMKYTAHWZFNEA
+Generation 8 | Score: 8/28 | Best string: OHTMFFKG JLTLQMLMKYTAHWZFNEA
+Generation 9 | Score: 9/28 | Best string: OHTMFFKG JLTLSKLMKYTAHWZFNEA
+Generation 10 | Score: 10/28 | Best string: OHTMFFKG JLTISKLMKYTAHWZFNE 
+Generation 11 | Score: 10/28 | Best string: OHTMFFKG JLTISKLMKYTAHWZFNE 
+Generation 12 | Score: 11/28 | Best string: OHTMFFKG JPTISKLIKYTAHWZFNE 
+Generation 13 | Score: 12/28 | Best string: OHTMFNKG JPTISKLIKYTAEWZFNE 
+Generation 14 | Score: 12/28 | Best string: OHTMFNKG JPTISKLIKYTAEWZFNE 
+Generation 15 | Score: 13/28 | Best string: OHTMFNKS JPTISKLIKYTAEWZFNE 
+Generation 16 | Score: 14/28 | Best string: OHTMFNKS JPTISKLIKYTAEWZANE 
+Generation 17 | Score: 15/28 | Best string: OHTMFNKS JPTISKLIKYTA WZANE 
+Generation 18 | Score: 16/28 | Best string: OHTMFNKS JPTISKLIKYTA WZASE 
+Generation 19 | Score: 16/28 | Best string: OHTMFNKS JPTISKLIKYTA WZASE 
+Generation 20 | Score: 17/28 | Best string: OHTMFNKS JPTISKLIKETA WZASE 
+Generation 21 | Score: 18/28 | Best string: OHTHFNKS JPTISVLIKETA WZASE 
+Generation 22 | Score: 18/28 | Best string: OHTHFNKS JPTISVLIKETA WZASE 
+Generation 23 | Score: 19/28 | Best string: OHTHFNKS JPEISVLIKETA WEASE 
+Generation 24 | Score: 19/28 | Best string: OHTHFNKS JPEISVLIKETA WEASE 
+Generation 25 | Score: 19/28 | Best string: OHTHFNKS JPEISVLIKETA WEASE 
+Generation 26 | Score: 19/28 | Best string: OHTHFNKS JPEISVLIKETA WEASE 
+Generation 27 | Score: 19/28 | Best string: OHTHFNKS JPEISVLIKETA WEASE 
+Generation 28 | Score: 19/28 | Best string: OHTHFNKS JPEISVLIKETA WEASE 
+Generation 29 | Score: 20/28 | Best string: OHTHFNKS JP ISVLIKETA WEASE 
+Generation 30 | Score: 21/28 | Best string: OHTHINKS JP ISVLIKETA WEASE 
+Generation 31 | Score: 21/28 | Best string: OHTHINKS JP ISVLIKETA WEASE 
+Generation 32 | Score: 21/28 | Best string: OHTHINKS JP ISVLIKETA WEASE 
+Generation 33 | Score: 22/28 | Best string: OHTHINKS EP IS LIKETA WEASE 
+Generation 34 | Score: 22/28 | Best string: OHTHINKS EP IS LIKETA WEASE 
+Generation 35 | Score: 23/28 | Best string: MHTHINKS EP IS LIKETA WEASE 
+Generation 36 | Score: 23/28 | Best string: MHTHINKS EP IS LIKETA WEASE 
+Generation 37 | Score: 23/28 | Best string: MHTHINKS EP IS LIKETA WEASE 
+Generation 38 | Score: 24/28 | Best string: MHTHINKS EP IS LIKE A WEASE 
+Generation 39 | Score: 25/28 | Best string: MHTHINKS EP IS LIKE A WEASEL
+Generation 40 | Score: 25/28 | Best string: MHTHINKS EP IS LIKE A WEASEL
+Generation 41 | Score: 25/28 | Best string: MHTHINKS EP IS LIKE A WEASEL
+Generation 42 | Score: 25/28 | Best string: MHTHINKS EP IS LIKE A WEASEL
+Generation 43 | Score: 25/28 | Best string: MHTHINKS EP IS LIKE A WEASEL
+Generation 44 | Score: 25/28 | Best string: MHTHINKS EP IS LIKE A WEASEL
+Generation 45 | Score: 26/28 | Best string: METHINKS EP IS LIKE A WEASEL
+Generation 46 | Score: 26/28 | Best string: METHINKS EP IS LIKE A WEASEL
+Generation 47 | Score: 26/28 | Best string: METHINKS EP IS LIKE A WEASEL
+Generation 48 | Score: 26/28 | Best string: METHINKS EP IS LIKE A WEASEL
+Generation 49 | Score: 26/28 | Best string: METHINKS EP IS LIKE A WEASEL
+Generation 50 | Score: 26/28 | Best string: METHINKS EP IS LIKE A WEASEL
+Generation 51 | Score: 26/28 | Best string: METHINKS EP IS LIKE A WEASEL
+Generation 52 | Score: 26/28 | Best string: METHINKS EP IS LIKE A WEASEL
+Generation 53 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 54 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 55 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 56 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 57 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 58 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 59 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 60 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 61 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 62 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 63 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 64 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 65 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 66 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 67 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 68 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 69 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 70 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 71 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 72 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 73 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 74 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 75 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 76 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 77 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 78 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 79 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 80 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 81 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 82 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 83 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 84 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 85 | Score: 27/28 | Best string: METHINKS IP IS LIKE A WEASEL
+Generation 86 | Score: 28/28 | Best string: METHINKS IT IS LIKE A WEASEL
+
+Target reached!
+Target: METHINKS IT IS LIKE A WEASEL
+Best string: METHINKS IT IS LIKE A WEASEL
+Final score: 28/28
+Generations: 86
