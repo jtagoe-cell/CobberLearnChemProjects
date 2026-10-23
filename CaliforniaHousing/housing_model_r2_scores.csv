@@ -1,0 +1,5 @@
+Model,R2 Score
+Random Forest Regressor,0.8044117339082415
+Support Vector Regressor,0.7275628923016759
+Decision Tree Regressor,0.6160675721345087
+Linear Regression,0.5757877060324507
