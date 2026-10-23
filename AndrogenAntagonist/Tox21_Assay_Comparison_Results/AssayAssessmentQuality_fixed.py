@@ -19,7 +19,6 @@ from tkinter import filedialog, messagebox
 import pandas as pd
 import requests
 from rdkit import Chem, RDLogger
-from rdkit.Chem import Draw
 
 # Hide noisy RDKit parse messages; invalid strings are handled in the code.
 RDLogger.DisableLog("rdApp.error")
@@ -39,9 +38,8 @@ CHEMICAL_COLUMN = "PUBCHEM_CID"
 ASSAY_COLUMN = "PROTOCOL_NAME"
 RESULT_COLUMN = "ASSAY_OUTCOME"
 
-# Set False if you only want the quality-assessment and missing-data CSVs.
-GENERATE_STRUCTURE_IMAGES = True
-
+# Set False to prevent generating 2D PNG structure images.
+GENERATE_STRUCTURE_IMAGES = False
 
 # ============================= FILE INPUT =============================
 def select_input_file():
@@ -183,119 +181,75 @@ def fetch_pubchem_smiles_batch(cids, batch_size=80):
     return found
 
 
+
+
 def generate_chemical_structures(data, output_folder):
-    """Create a one-row-per-CID CSV and 2D PNG structures where SMILES are valid."""
+    """Retrieve actual SMILES from PubChem and save a chemical lookup CSV.
+    Does not generate any 2D structure images.
+    """
     output_folder = Path(output_folder)
-    structure_folder = output_folder / "chemical_structures"
-    structure_folder.mkdir(parents=True, exist_ok=True)
+    output_folder.mkdir(parents=True, exist_ok=True)
 
-    required = [c for c in ["PUBCHEM_CID", "SMILES"] if c in data.columns]
-    if "PUBCHEM_CID" not in required:
-        raise ValueError("PUBCHEM_CID column is required to build the chemical structure table.")
-    if "SMILES" not in required:
-        data = data.copy()
-        data["SMILES"] = ""
+    if "PUBCHEM_CID" not in data.columns:
+        raise ValueError("PUBCHEM_CID column is required.")
 
-    chemicals = data[["PUBCHEM_CID", "SMILES"]].copy()
-    chemicals["PUBCHEM_CID"] = chemicals["PUBCHEM_CID"].fillna("").astype(str).str.strip()
-    chemicals = chemicals[chemicals["PUBCHEM_CID"] != ""].drop_duplicates("PUBCHEM_CID")
-    chemicals["SMILES"] = chemicals["SMILES"].fillna("").astype(str).str.strip()
+    # Get one row per chemical.
+    unique_chemicals = data[["PUBCHEM_CID"]].drop_duplicates().copy()
 
-    # Keep valid SMILES already present; retrieve only missing/invalid entries.
-    valid_by_cid = {}
-    needs_lookup = []
-    for _, row in chemicals.iterrows():
-        cid, smiles = row["PUBCHEM_CID"], row["SMILES"]
-        if is_valid_smiles(smiles):
-            valid_by_cid[cid] = smiles
+    unique_chemicals["PUBCHEM_CID"] = (
+        unique_chemicals["PUBCHEM_CID"]
+        .fillna("")
+        .astype(str)
+        .str.strip()
+        .str.replace(r"\.0$", "", regex=True)
+    )
+
+    # Retrieve real molecular SMILES from PubChem.
+    cids = unique_chemicals.loc[
+        unique_chemicals["PUBCHEM_CID"].str.fullmatch(r"\d+"),
+        "PUBCHEM_CID"
+    ].drop_duplicates().tolist()
+
+    print(f"\nRetrieving actual SMILES for {len(cids):,} unique PubChem CIDs...")
+    smiles_by_cid = fetch_pubchem_smiles_batch(cids)
+
+    # Create the chemical lookup table.
+    output_rows = []
+
+    for cid in unique_chemicals["PUBCHEM_CID"]:
+        smiles = smiles_by_cid.get(cid, "")
+
+        if smiles and is_valid_smiles(smiles):
+            status = "Actual SMILES retrieved and validated"
+        elif not cid:
+            status = "Missing PubChem CID"
+        elif not cid.isdigit():
+            status = "Invalid PubChem CID"
         else:
-            needs_lookup.append(cid)
+            status = "SMILES retrieval failed or unavailable"
 
-    print(f"\nUnique chemicals for structure extraction: {len(chemicals):,}")
-    print(f"Valid source SMILES: {len(valid_by_cid):,}")
-    print(f"Missing/invalid source SMILES needing lookup: {len(needs_lookup):,}")
-    retrieved = fetch_pubchem_smiles_batch(needs_lookup) if needs_lookup else {}
-    valid_by_cid.update(retrieved)
-
-    results = []
-    for idx, (_, row) in enumerate(chemicals.iterrows(), start=1):
-        cid = row["PUBCHEM_CID"]
-        smiles = valid_by_cid.get(cid, "")
-        original = row["SMILES"]
-        source = "Source dataset" if smiles and is_valid_smiles(original) else ("Retrieved from PubChem" if smiles else "Unavailable")
-        canonical = ""
-        image_path = ""
-        status = "SMILES unavailable"
-
-        if smiles:
-            mol = Chem.MolFromSmiles(smiles)
-            if mol is not None:
-                canonical = Chem.MolToSmiles(mol)
-                status = "SMILES valid; image not generated"
-                if GENERATE_STRUCTURE_IMAGES:
-                    safe_cid = re.sub(r"[^A-Za-z0-9_-]", "_", cid)
-                    path = structure_folder / f"{safe_cid}.png"
-                    try:
-                        Draw.MolToImage(mol, size=(500, 400)).save(path)
-                        image_path = str(path)
-                        status = "Structure generated"
-                    except Exception as exc:
-                        status = f"Image error: {exc}"
-        results.append({
+        output_rows.append({
             "PUBCHEM_CID": cid,
             "SMILES": smiles,
-            "CANONICAL_SMILES": canonical,
-            "SMILES_SOURCE": source,
-            "STRUCTURE_FILE": image_path,
             "STRUCTURE_STATUS": status,
+            "IMAGE_PATH": ""
         })
-        if idx % 500 == 0:
-            print(f"Structure generation progress: {idx:,}/{len(chemicals):,}")
 
-    output = pd.DataFrame(results)
+    output = pd.DataFrame(output_rows)
+
     csv_path = output_folder / "tox21_chemical_smiles_and_structures.csv"
     output.to_csv(csv_path, index=False)
-    print("\nChemical structure extraction complete.")
-    print(f"Valid SMILES: {output['SMILES'].ne('').sum():,}/{len(output):,}")
-    print(f"Structures generated: {output['STRUCTURE_STATUS'].eq('Structure generated').sum():,}")
-    print(f"Chemical lookup CSV: {csv_path}")
-    if GENERATE_STRUCTURE_IMAGES:
-        print(f"Structure images folder: {structure_folder}")
-    return output
 
+    retrieved_count = output["SMILES"].ne("").sum()
+    unresolved_count = len(output) - retrieved_count
 
-# ============================= ASSAY MATCHING =============================
-def identify_viability_rows(data):
-    return data[ASSAY_COLUMN].fillna("").apply(lambda value: contains_any(value, VIABILITY_KEYWORDS))
+    print(f"Unique chemicals: {len(output):,}")
+    print(f"Actual SMILES retrieved: {retrieved_count:,}")
+    print(f"Unresolved chemicals: {unresolved_count:,}")
+    print(f"Chemical lookup CSV saved: {csv_path}")
+    print("2D structure image generation is disabled.")
 
-
-def select_primary_rows(data, viability_mask):
-    primary_data = data.loc[~viability_mask].copy()
-    groups = []
-    for group_name, keywords in PRIMARY_OUTCOMES.items():
-        mask = primary_data[ASSAY_COLUMN].fillna("").apply(lambda value: contains_any(value, keywords))
-        group = primary_data.loc[mask].copy()
-        group["primary_outcome_group"] = group_name
-        groups.append(group)
-        print(f"{group_name}: {len(group):,} matching assay records")
-    return pd.concat(groups, ignore_index=True).drop_duplicates() if groups else pd.DataFrame()
-
-
-def match_viability(primary_row, viability_lookup, chemical_col, assay_col, result_col):
-    protocol = normalize_text(primary_row.get(assay_col, ""))
-    if protocol not in {"antagonist1", "antagonist2", "antagonist3"}:
-        return {
-            "matched_viability_assay": "",
-            "matched_viability_result": "",
-            "viability_match_status": "Unknown antagonist protocol",
-            "quality_assessment": "Inconclusive: verify protocol pairing",
-        }
-    paired = protocol.replace("antagonist", "viability")
-    chemical_id = normalize_text(primary_row.get(chemical_col, ""))
-    sample_id = normalize_text(primary_row.get("SAMPLE_ID", ""))
-    group = viability_lookup.get(paired, pd.DataFrame())
-    matching = pd.DataFrame()
-    method = "PUBCHEM_CID"
+    return smiles_by_cid
 
     # Use SAMPLE_ID only if it actually finds a record in the paired protocol.
     if sample_id and "SAMPLE_ID" in group.columns:
@@ -327,7 +281,29 @@ def match_viability(primary_row, viability_lookup, chemical_col, assay_col, resu
         "viability_match_status": status,
         "quality_assessment": assessment,
     }
+def identify_viability_rows(data):
+    """
+    Identify rows belonging to viability/cytotoxicity protocols.
+    """
+    if "PROTOCOL_NAME" not in data.columns:
+        print("ERROR: PROTOCOL_NAME column is missing.")
+        return data.iloc[0:0].copy()
 
+    protocol_names = (
+        data["PROTOCOL_NAME"]
+        .fillna("")
+        .astype(str)
+        .str.strip()
+        .str.lower()
+    )
+
+    viability_mask = protocol_names.str.startswith("viability")
+
+    viability_data = data.loc[viability_mask].copy()
+
+    print(f"Viability records identified: {len(viability_data):,}")
+
+    return viability_data
 
 def run_analysis(input_path):
     input_path = Path(input_path)
@@ -338,7 +314,11 @@ def run_analysis(input_path):
 
     data = load_data(input_path)
     print(f"Rows loaded: {len(data):,}")
+    print("Duplicate column names:")
+    print(data.columns[data.columns.duplicated()].tolist())
 
+    print("Data shape:", data.shape)
+    print("Column names:", data.columns.tolist())
 
     print("\n--- SMILES COLUMN DIAGNOSTIC ---")
     print("Column names:", data.columns.tolist())
