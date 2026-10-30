@@ -1,0 +1,27 @@
+PROTEIN STRUCTURE COMPARISON RESULTS
+====================================
+
+EXPERIMENTAL STRUCTURE
+Chains: 1
+Residues: 21
+Atoms: 163
+
+ALPHAFOLD STRUCTURE
+Chains: 1
+Residues: 21
+Atoms: 162
+
+STRUCTURAL COMPARISON
+Matched residues: 21
+Overall RMSD: 0.680 Angstroms
+
+ALPHAFOLD CONFIDENCE
+Average pLDDT: 95.48
+Highest pLDDT: 97.75
+Lowest pLDDT: 86.88
+
+CONFIDENCE AND DISTANCE CORRELATION
+Pearson correlation: -0.122
+
+REGIONS TO INVESTIGATE
+Low-confidence residues with distance above 3 Å: 0
